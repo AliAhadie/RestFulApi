@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django import forms
 from accounts.models import User,Profile
+from blog.models import Post,Category
 from django.contrib.auth.admin import UserAdmin
 
 
@@ -37,4 +38,5 @@ class CoustomUserAdmin(UserAdmin):
 
 admin.site.register(User,CoustomUserAdmin)
 admin.site.register(Profile)
+
 

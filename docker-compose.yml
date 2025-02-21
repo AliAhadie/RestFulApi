@@ -4,11 +4,15 @@ services:
   backend:
     build: .
     container_name: django_app
+    image: backend
     command: python manage.py runserver 0.0.0.0:8000
     ports:
       - "8000:8000"
     volumes:
       - ./core:/app  
+    environment:
+      - DEBUG=True
+      - SECRET_KEY=secret
 
 volumes:
   sqlite_data:

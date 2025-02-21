@@ -28,7 +28,7 @@ class UserManager(BaseUserManager):
 
 """create coustom user in admin"""
 class User(AbstractBaseUser, PermissionsMixin):
-    email = email = models.EmailField(max_length=255, unique=True)
+    email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
