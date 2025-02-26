@@ -14,4 +14,5 @@ urlpatterns = [
     path('delete/<int:pk>/',PostDeleteView.as_view(),name='delete'),
     path('api/v1/',include('blog.api.v1.urls')),
     
+    
 ]

@@ -40,8 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts',
     'blog',
-    'rest_framework'
-
+    'rest_framework',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -136,3 +136,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 """ changing my admin """
 AUTH_USER_MODEL= 'accounts.User'
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+}

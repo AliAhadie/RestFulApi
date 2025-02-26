@@ -1,8 +1,9 @@
 from django.db import models
+from accounts.models import Profile
 
 
 class Post(models.Model):
-    author=models.ForeignKey('accounts.Profile',on_delete=models.SET_NULL,null=True)                  
+    author=models.OneToOneField(Profile,on_delete=models.SET_NULL,null=True)                  
     title=models.CharField(max_length=255)
     image=models.ImageField(blank=True,null=True)
     status=models.BooleanField()

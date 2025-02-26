@@ -46,8 +46,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.email
     
 class Profile(models.Model):
-    user=models.ForeignKey(User,on_delete=models.CASCADE)
-    email=models.EmailField(max_length=255)
+    user=models.OneToOneField(User,on_delete=models.CASCADE)
     first_name=models.CharField(max_length=255)
     last_name=models.CharField(max_length=255)
     image=models.ImageField(blank=True,null=True)
