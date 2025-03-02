@@ -10,18 +10,17 @@ from rest_framework import status
 from .permission import IsOwnerOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
-
-
-
+from .paginations import *
 
 class PostListViewSet(viewsets.ModelViewSet):
-    permission_classes=[IsOwnerOrReadOnly]
+    permission_classes=[IsOwnerOrReadOnly,IsAuthenticatedOrReadOnly]
     serializer_class=PostSerializer
     queryset=Post.objects.all()
     lookup_field='id'
     filter_backends = [DjangoFilterBackend,filters.SearchFilter]
     filterset_fields = {'category':['exact','in']}
     search_fields = ['title',]
+    pagination_class=DefaultPaginator
     
     def perform_create(self, serializer):
         profile = self.request.user.profile  # Assuming the User model has a related Profile model
@@ -32,3 +31,6 @@ class CategoryViewSet(viewsets.ModelViewSet):
     serializer_class=CategorySerializer
     queryset=Category.objects.all()   
     lookup_field='id' 
+
+
+

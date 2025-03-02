@@ -3,7 +3,7 @@ from accounts.models import Profile
 
 
 class Post(models.Model):
-    author=models.OneToOneField(Profile,on_delete=models.SET_NULL,null=True)                  
+    author=models.ForeignKey(Profile,on_delete=models.SET_NULL,null=True)                  
     title=models.CharField(max_length=255)
     image=models.ImageField(blank=True,null=True)
     status=models.BooleanField()
