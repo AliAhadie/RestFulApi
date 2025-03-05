@@ -4,4 +4,6 @@ pillow
 djangorestframework
 markdown 
 django-filter
--U drf-yasg[validation]
+drf-yasg[validation]
+djangorestframework-simplejwt
+django-mail-templated

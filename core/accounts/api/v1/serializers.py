@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from accounts.models import User
+from accounts.models import User,Profile
 from django.core import exceptions
 import django.contrib.auth.password_validation as validators
 from django.contrib.auth import authenticate
@@ -59,9 +59,6 @@ class AuthTokenLoginSerializer(serializers.Serializer):
             user = authenticate(request=self.context.get('request'),
                                 email=email, password=password)
 
-            # The authenticate call simply returns None for is_active=False
-            # users. (Assuming the default ModelBackend authentication
-            # backend.)
             if not user:
                 msg = _('Unable to log in with provided credentials.')
                 raise serializers.ValidationError(msg, code='authorization')
@@ -71,3 +68,32 @@ class AuthTokenLoginSerializer(serializers.Serializer):
 
         attrs['user'] = user
         return attrs
+
+class ChangePasswordSerializer(serializers.Serializer):
+
+    old_password=serializers.CharField(write_only=True,required=True)
+    new_password=serializers.CharField(write_only=True,required=True)
+    confirm_password=serializers.CharField(write_only=True,required=True)
+ 
+
+    def validate(self, attrs):
+        if attrs['new_password']!=attrs['confirm_password']:
+            return serializers.ValidationError('passwords dosnt match')
+
+        errors={}
+        try:
+            validators.validate_password(password=attrs['new_password'])
+
+        except serializers.ValidationError as e:
+            errors['new_password']=list(e.messages) 
+        if errors:
+            raise serializers.ValidationError(errors)
+        return super(ChangePasswordSerializer, self).validate(attrs)     
+
+
+class ProfileApiSerializer(serializers.ModelSerializer):
+    email=serializers.CharField(source='user.email',read_only=True)
+    class Meta:
+        model=Profile
+        fields=('email','first_name','last_name','bio','image')
+        read_only_fields=['email',]
