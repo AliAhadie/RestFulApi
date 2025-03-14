@@ -1,4 +1,5 @@
 from rest_framework import permissions
+from rest_framework.response import Response
 
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
@@ -15,3 +16,13 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
 
         # Instance must have an attribute named `owner`.
         return obj.author == request.user.profile
+
+
+class IsVrifed(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user.is_verified
+
+
+class IsNotAuthenticated(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return not request.user.is_authenticated
