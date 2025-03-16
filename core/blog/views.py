@@ -13,7 +13,8 @@ from blog.models import Post
 from django.core.exceptions import ImproperlyConfigured
 from blog.forms import ContactForm
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-
+from .tasks import send_email
+from django.http import HttpResponse
 
 """view with templateview"""
 
@@ -75,3 +76,7 @@ class PostUpdateView(UpdateView):
 class PostDeleteView(DeleteView):
     success_url = "/blog/"
     model = Post
+
+def test(requset):
+    send_email.delay()
+    return HttpResponse("email sent")

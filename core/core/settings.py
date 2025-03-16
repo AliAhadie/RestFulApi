@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "rest_framework_simplejwt",
     "mail_templated",
+    "django_celery_beat"
 ]
 
 
@@ -163,3 +164,5 @@ EMAIL_HOST_USER = ""
 EMAIL_HOST_PASSWORD = ""
 
 EMAIL_PORT = 25
+
+CELERY_BROKER_URL = "redis://redis:6379/0"

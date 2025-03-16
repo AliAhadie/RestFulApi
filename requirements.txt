@@ -11,3 +11,7 @@ django-mail-templated
 #testing
 pytest
 pytest-django
+
+celery
+redis
+django-celery-beat

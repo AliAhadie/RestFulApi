@@ -1,35 +1,31 @@
-version: '3.9'
+version: "3.9"
 
 services:
   backend:
     build: .
     container_name: django_app
-    image: backend
     command: python manage.py runserver 0.0.0.0:8000
     ports:
       - "8000:8000"
     volumes:
-      - ./core:/app  
+      - ./core:/app
     environment:
       - DEBUG=True
       - SECRET_KEY=secret
-  
-
-
 
   smtp4dev:
     image: rnwood/smtp4dev:v3
     restart: always
     ports:
       # Change the number before : to the port the web interface should be accessible on
-      - '5000:80'
+      - "5000:80"
       # Change the number before : to the port the SMTP server should be accessible on
-      - '25:25'
+      - "25:25"
       # Change the number before : to the port the IMAP server should be accessible on
-      - '143:143'
+      - "143:143"
     volumes:
       # This is where smtp4dev stores the database..
-        - smtp4dev-data:/smtp4dev
+      - ./smtp4dev:/app/Smtp4Dev.Server/data
     environment:
       # Uncomment to customise these settings
       # This is not a complete list of the available settings.
@@ -83,10 +79,26 @@ services:
       #Specifies the port the IMAP server will listen on - allows standard email clients to view/retrieve messages
       #"ServerOptions__ImapPort"=143
 
-volumes:
-  smtp4dev-data:
-  
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+  celery:
+    build: .
+    container_name: celery
+    command: celery -A core worker --loglevel=info
+    volumes:
+      - ./core:/app
+    environment:
+      - DEBUG=True
+      - SECRET_KEY=secret
+    depends_on:
+      - redis
+      - backend
 
 
 
-  
+
