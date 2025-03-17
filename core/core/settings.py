@@ -40,20 +40,25 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "accounts",
     "blog",
+    'corsheaders',
     "rest_framework",
     "django_filters",
     "drf_yasg",
     "rest_framework.authtoken",
     "rest_framework_simplejwt",
     "mail_templated",
-    "django_celery_beat"
+    "django_celery_beat",
+  
 ]
+
+
 
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.middleware.common.CommonMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
@@ -165,4 +170,20 @@ EMAIL_HOST_PASSWORD = ""
 
 EMAIL_PORT = 25
 
+
 CELERY_BROKER_URL = "redis://redis:6379/0"
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://redis:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
+
+
+
+CORS_ALLOW_ALL_ORIGINS = True  # فقط برای تست

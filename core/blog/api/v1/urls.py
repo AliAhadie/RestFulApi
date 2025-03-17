@@ -8,3 +8,7 @@ routers = routers.DefaultRouter()
 routers.register("posts", views.PostListViewSet, basename="post")
 routers.register("category", views.CategoryViewSet, basename="category")
 urlpatterns = routers.urls
+
+urlpatterns += [
+    path("post-list/", views.TemplateView.as_view(), name="post-list"),
+]

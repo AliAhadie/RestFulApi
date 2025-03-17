@@ -24,6 +24,7 @@ from blog.api.v1.permission import IsVrifed,IsNotAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.tokens import AccessToken
 from django.contrib.auth.hashers import make_password
+from blog.tasks import send_email
 
 
 """ Register User """
@@ -47,7 +48,7 @@ class RegisterApiView(generics.CreateAPIView):
             token=self.get_tokens_for_user(user)
             message = EmailMessage('email/hello.tpl',{'token':token}, from_email='admin@admin.com',
                                    to=[email])
-            SendEmailThread(message).start()
+            send_email(message)
             return Response('email sent')
         return Response(serializer.errors)
    
@@ -116,7 +117,7 @@ class SendEmail(generics.GenericAPIView):
             message = EmailMessage('email/hello.tpl',{'token':token}, from_email='admin@admin.com',
                                    to=['ali@gmail.com'])
          
-            SendEmailThread(message).start()
+            send_email(message)
             return Response('email sent')
       
         def get_tokens_for_user(self,user):

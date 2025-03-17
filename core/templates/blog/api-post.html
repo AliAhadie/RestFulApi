@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نمایش پست‌های سایت</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            width: 90%;
+            max-width: 800px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .post {
+            border-bottom: 1px solid #ddd;
+            padding: 15px 0;
+        }
+        .post:last-child {
+            border-bottom: none;
+        }
+        .post h2 {
+            margin: 0 0 10px;
+            color: #333;
+        }
+        .post p {
+            color: #666;
+            line-height: 1.6;
+        }
+        .post .meta {
+            font-size: 0.9em;
+            color: #999;
+        }
+        .pagination {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .pagination button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .pagination button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>لیست پست‌ها</h1>
+        <div id="posts"></div>
+
+        <div class="pagination">
+            <button id="prevPage" disabled>صفحه قبل</button>
+            <button id="nextPage" disabled>صفحه بعد</button>
+        </div>
+    </div>
+
+    <script>
+        let apiUrl = "http://127.0.0.1:8000/api/v1/posts/";
+
+        function fetchPosts(url) {
+            fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("مشکل در دریافت داده");
+                }
+                return response.json();
+            })
+            .then(data => {
+                const postsContainer = document.getElementById("posts");
+                postsContainer.innerHTML = "";
+
+                data.results.forEach(post => {
+                    const postElement = document.createElement("div");
+                    postElement.classList.add("post");
+                    postElement.innerHTML = `
+                        <h2><a href="${post.absolute_url}" target="_blank">${post.title}</a></h2>
+                        <p class="meta">نویسنده: ${post.author} | تاریخ: ${new Date(post.published_date).toLocaleDateString("fa-IR")}</p>
+                        <p>دسته‌بندی: ${post.category}</p>
+                    `;
+                    postsContainer.appendChild(postElement);
+                });
+
+                // مدیریت دکمه‌های صفحه‌بندی
+                document.getElementById("prevPage").disabled = !data.previous;
+                document.getElementById("nextPage").disabled = !data.next;
+
+                // تنظیم آدرس صفحه بعد و قبل
+                document.getElementById("prevPage").onclick = () => fetchPosts(data.previous);
+                document.getElementById("nextPage").onclick = () => fetchPosts(data.next);
+            })
+            .catch(error => {
+                console.error("خطا:", error);
+                document.getElementById("posts").innerHTML = "<p>مشکلی در بارگیری داده‌ها پیش آمد.</p>";
+            });
+        }
+
+        // بارگیری اولیه داده‌ها
+        fetchPosts(apiUrl);
+    </script>
+
+</body>
+</html>
