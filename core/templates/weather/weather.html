@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>وضعیت آب و هوا - تهران</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .weather-container {
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            text-align: center;
+            padding: 20px;
+            color: #333;
+        }
+
+        .location {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .date {
+            font-size: 16px;
+            color: #777;
+            margin-bottom: 20px;
+        }
+
+        .temperature {
+            font-size: 50px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #ff5733;
+        }
+
+        .weather-condition {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .weather-icon {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+        }
+
+        .details {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .details div {
+            margin: 5px 0;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+    <div class="weather-container">
+        <div class="location" id="location"></div>
+        <div class="date" id="date"></div>
+        <div class="temperature" id="temperature"></div>
+        <div class="weather-condition" id="condition"></div>
+        <div>
+            <img src="" alt="Weather Icon" class="weather-icon" id="weather-icon">
+        </div>
+        <div class="details">
+            <div><strong>سرعت باد:</strong> <span id="wind-speed"></span> km/h</div>
+            <div><strong>رطوبت:</strong> <span id="humidity"></span>%</div>
+            <div><strong>فشار هوا:</strong> <span id="pressure"></span> mb</div>
+            <div><strong>شاخص UV:</strong> <span id="uv"></span></div>
+            <div><strong>دید:</strong> <span id="visibility"></span> km</div>
+        </div>
+        <div class="footer" id="last-updated"></div>
+    </div>
+
+    <script>
+        async function fetchWeatherData() {
+            try {
+                const response = await fetch("http://127.0.0.1:8000/weather/api/");
+                const weatherData = await response.json();
+                
+                document.getElementById("location").innerText = `${weatherData.location.name}, ${weatherData.location.country}`;
+                document.getElementById("date").innerText = weatherData.location.localtime;
+                document.getElementById("temperature").innerText = `${weatherData.current.temp_c}°C`;
+                document.getElementById("condition").innerText = weatherData.current.condition.text;
+                document.getElementById("weather-icon").src = weatherData.current.condition.icon;
+                document.getElementById("wind-speed").innerText = weatherData.current.wind_kph;
+                document.getElementById("humidity").innerText = weatherData.current.humidity;
+                document.getElementById("pressure").innerText = weatherData.current.pressure_mb;
+                document.getElementById("uv").innerText = weatherData.current.uv;
+                document.getElementById("visibility").innerText = weatherData.current.vis_km;
+                document.getElementById("last-updated").innerText = `داده‌ها به‌روز شده در ${weatherData.current.last_updated}`;
+            } catch (error) {
+                console.error("خطا در دریافت داده‌ها:", error);
+            }
+        }
+
+        fetchWeatherData();
+    </script>
+</body>
+</html>

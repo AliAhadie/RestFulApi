@@ -14,5 +14,6 @@ urlpatterns = [
     path("update/<int:pk>", PostUpdateView.as_view(), name="update"),
     path("delete/<int:pk>/", PostDeleteView.as_view(), name="delete"),
     path("api/v1/", include("blog.api.v1.urls")),
-    path('test',test,name='test')
+    path('test/',test,name='test'),
+
 ]
