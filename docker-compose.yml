@@ -9,6 +9,7 @@ services:
       - "8000:8000"
     volumes:
       - ./core:/app
+      
     environment:
       - DEBUG=True
       - SECRET_KEY=secret
